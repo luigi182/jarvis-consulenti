@@ -1,0 +1,9 @@
+# Dati dei clienti: MAI nello storico del codice
+archivio/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+# File generati da Python
+__pycache__/
+*.pyc
