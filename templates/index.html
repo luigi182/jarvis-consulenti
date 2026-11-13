@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarvis Consulenti</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>Jarvis Consulenti</h1>
+        <p>Strumenti locali: ricerca professionale e stima pensionistica</p>
+      </header>
+
+      <section class="panel">
+        <h2>Previsione pensione</h2>
+        <form id="pensione-form">
+          <div class="grid">
+            <label>Montante (€)<input type="number" step="0.01" name="montante_euro" value="200000"></label>
+            <label>Coeff. trasformazione<input type="number" step="0.0001" name="coefficiente" value="0.05"></label>
+            <label>Anni proiezione<input type="number" min="0" name="anni_proiezione" value="0"></label>
+            <label>Contributi annui (€)<input type="number" step="0.01" name="contributi_annui_euro" value="0"></label>
+            <label>Rivalutazione annua<input type="number" step="0.0001" name="rivalutazione_annua" value="0.00"></label>
+            <label>Mensilità<input type="number" min="1" max="15" name="mensilita" value="13"></label>
+          </div>
+          <div class="grid">
+            <label>IRPEF scaglioni (JSON)<textarea name="irpef_scaglioni">[[28000, 0.23], [50000, 0.35], [null, 0.43]]</textarea></label>
+            <label>Detrazione annua (€)<input type="number" step="0.01" name="detrazione_annua" value="0"></label>
+            <label>Addizionali %<input type="number" step="0.0001" name="addizionali_percentuale" value="0"></label>
+          </div>
+          <button type="submit">Calcola</button>
+        </form>
+        <pre id="pensione-output">{} </pre>
+      </section>
+
+      <section class="panel">
+        <h2>Ricerca locale</h2>
+        <form id="ricerca-form">
+          <label>Query<input type="text" name="query" value="licenziamento"></label>
+          <div class="grid compact">
+            <label>Area<input type="text" name="area" value="lavoro"></label>
+            <label>Ambito<input type="text" name="ambito" value=""></label>
+            <label>Territorio<input type="text" name="territorio" value=""></label>
+            <label>Limite<input type="number" min="1" max="20" name="limite" value="5"></label>
+          </div>
+          <button type="submit">Cerca</button>
+        </form>
+        <pre id="ricerca-output">{}</pre>
+      </section>
+    </main>
+
+    <script>
+      async function callJson(url, payload) {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        return { response, data };
+      }
+
+      document.getElementById('pensione-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.target);
+        const payload = {
+          montante_euro: Number(form.get('montante_euro')),
+          coefficiente: Number(form.get('coefficiente')),
+          anni_proiezione: Number(form.get('anni_proiezione')),
+          contributi_annui_euro: Number(form.get('contributi_annui_euro')),
+          rivalutazione_annua: Number(form.get('rivalutazione_annua')),
+          mensilita: Number(form.get('mensilita')),
+          irpef_scaglioni: JSON.parse(String(form.get('irpef_scaglioni') || '[]')),
+          detrazione_annua: Number(form.get('detrazione_annua')),
+          addizionali_percentuale: Number(form.get('addizionali_percentuale'))
+        };
+        const { data } = await callJson('/api/pensione', payload);
+        document.getElementById('pensione-output').textContent = JSON.stringify(data, null, 2);
+      });
+
+      document.getElementById('ricerca-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.target);
+        const payload = {
+          query: String(form.get('query') || '').trim(),
+          area: String(form.get('area') || '').trim() || null,
+          ambito: String(form.get('ambito') || '').trim() || null,
+          territorio: String(form.get('territorio') || '').trim() || null,
+          limite: Number(form.get('limite')) || 5
+        };
+        const { data } = await callJson('/api/ricerca', payload);
+        document.getElementById('ricerca-output').textContent = JSON.stringify(data, null, 2);
+      });
+    </script>
+  </body>
+</html>
