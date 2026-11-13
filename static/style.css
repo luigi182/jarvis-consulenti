@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #1d2433;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  margin-bottom: 0.25rem;
+}
+
+.panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+input, textarea, button {
+  font: inherit;
+}
+
+input, textarea {
+  border: 1px solid #ccd5e0;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  background: #f9fbff;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 0.9rem;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #1d63dc;
+  color: white;
+  cursor: pointer;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #111827;
+  color: #d9f5ff;
+  border-radius: 8px;
+  padding: 0.9rem;
+  overflow-x: auto;
+}
