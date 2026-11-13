@@ -1,0 +1,39 @@
+{
+  "irpef": {
+    "scaglioni": [[15000, 0.23], [28000, 0.27], [50000, 0.38], [75000, 0.41], [None, 0.43]]
+  },
+  "detrazione_lavoro_dipendente": {
+    "soglia1": 15000,
+    "soglia2": 28000,
+    "soglia3": 50000,
+    "max": 0,
+    "minimo": 0,
+    "minimo_tempo_determinato": 0,
+    "base2": 0,
+    "extra2": 0
+  },
+  "inps": {
+    "soglia_prima_fascia_annua": 51600,
+    "aliquota_dipendente": 0.09,
+    "aliquota_aggiuntiva": 0.05
+  },
+  "interessi_legali": {
+    "2024": 0.011,
+    "2025": 0.012,
+    "2026": 0.012,
+    "2027": 0.012,
+    "2028": 0.012
+  },
+  "tfr": {
+    "divisore": 13.5
+  },
+  "pensioni": {
+    "fonte": "Requisiti di riferimento 2026-2028 (valori campione, da verificare annualmente).",
+    "vecchiaia_eta_mesi": {"2026": 660, "2027": 660, "2028": 660, "2029": 660},
+    "vecchiaia_contributi_mesi": 240,
+    "anticipata_contributi_mesi": {"2026": {"M": 420, "F": 420}, "2027": {"M": 420, "F": 420}, "2028": {"M": 420, "F": 420}, "2029": {"M": 420, "F": 420}},
+    "finestra_anticipata_mesi": 12,
+    "contributiva_alternativa": {"eta_extra_mesi": 24, "contributi_effettivi_mesi": 120},
+    "provvisori": ["2026", "2027", "2028"]
+  }
+}
