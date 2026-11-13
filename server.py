@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import threading
+import webbrowser
+
 from flask import Flask, jsonify, render_template, request
 
 from pensioni import stima_importo
 from ricerca import cerca
 
+HOST = "127.0.0.1"
+PORT = 5000
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
 
@@ -23,7 +28,7 @@ def api_pensione():
     payload = request.get_json(silent=True) or {}
     try:
         return jsonify({"ok": True, "result": stima_importo(payload)})
-    except ValueError as exc:  # pragma: no cover - runtime validation path
+    except (TypeError, ValueError) as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
 
 
@@ -34,25 +39,25 @@ def api_ricerca():
     if not query:
         return jsonify({"ok": False, "error": "Inserire una query di ricerca."}), 400
     try:
-        filtro_area = payload.get("area")
-        filtro_ambito = payload.get("ambito")
-        filtro_territorio = payload.get("territorio")
-        data_ref = payload.get("alla_data")
-        limite = payload.get("limite", 20)
         return jsonify({
             "ok": True,
             "result": cerca(
                 query,
-                area=filtro_area,
-                ambito=filtro_ambito,
-                territorio=filtro_territorio,
-                alla_data=data_ref,
-                limite=int(limite),
+                area=payload.get("area") or None,
+                ambito=payload.get("ambito") or None,
+                territorio=payload.get("territorio") or None,
+                alla_data=payload.get("alla_data") or None,
+                limite=int(payload.get("limite", 20)),
             ),
         })
-    except ValueError as exc:  # pragma: no cover - runtime validation path
+    except (TypeError, ValueError) as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
 
 
+def main():
+    threading.Timer(1.0, lambda: webbrowser.open(f"http://{HOST}:{PORT}")).start()
+    app.run(host=HOST, port=PORT, debug=False, use_reloader=False)
+
+
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    main()
