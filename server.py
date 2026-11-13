@@ -10,6 +10,7 @@ from ricerca import cerca
 
 HOST = "127.0.0.1"
 PORT = 5000
+URL = f"http://{HOST}:{PORT}"
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
 
@@ -55,7 +56,8 @@ def api_ricerca():
 
 
 def main():
-    threading.Timer(1.0, lambda: webbrowser.open(f"http://{HOST}:{PORT}")).start()
+    # Apri il browser solo dopo che Flask ha avuto il tempo di avviare il server.
+    threading.Timer(1.0, lambda: webbrowser.open(URL)).start()
     app.run(host=HOST, port=PORT, debug=False, use_reloader=False)
 
 
