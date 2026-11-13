@@ -29,6 +29,21 @@ class TestStimaPensione(unittest.TestCase):
                            "anni_proiezione": 0, "contributi_annui_euro": 0,
                            "irpef_scaglioni": [[28000, 0.23]]})
 
+    def test_rifiuta_nan_e_anni_frazionari(self):
+        for value in (float("nan"), float("inf")):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                stima_importo({"montante_euro": value, "coefficiente": 0.05,
+                               "anni_proiezione": 0, "contributi_annui_euro": 0})
+        with self.assertRaises(ValueError):
+            stima_importo({"montante_euro": 1, "coefficiente": 0.05,
+                           "anni_proiezione": 1.2, "contributi_annui_euro": 0})
+
+    def test_lordo_senza_parametri_irpef_non_finge_netto(self):
+        risultato = stima_importo({"montante_euro": 200000, "coefficiente": 0.05,
+                                   "anni_proiezione": 0, "contributi_annui_euro": 0})
+        self.assertEqual(risultato["lordo_annuo_euro"], 10000)
+        self.assertIsNone(risultato["netto_annuo_euro"])
+
 
 if __name__ == "__main__":
     unittest.main()
